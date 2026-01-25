@@ -22,7 +22,7 @@ export interface StatsCardData {
 
 export interface Skill {
   name: string;
-  icon?: string;
+  icon: React.ReactNode;
 }
 
 export interface SocialLink {
