@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider } from './hooks/useTheme';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { UndoRedoProvider } from './hooks/useUndoRedo';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Logger } from './utils/logger';
