@@ -12,6 +12,7 @@ import { SocialLinks } from './components/SocialLinks';
 import { ExportButton } from './components/ExportButton';
 import { ThemeToggle } from './components/ThemeToggle';
 import { UndoRedoControls } from './components/UndoRedoControls';
+import UndoRedoDemo from './components/UndoRedoDemo';
 
 const App: React.FC = () => {
   Logger.info('App rendered');
@@ -37,6 +38,7 @@ const App: React.FC = () => {
               </aside>
               <section className="flex-1 space-y-4">
                 <SectionList />
+                <UndoRedoDemo />
                 <MarkdownPreview />
                 <ExportButton />
               </section>
