@@ -1,0 +1,15 @@
+# Each line is a file pattern followed by one or more owners.
+
+# Default owner for everything in the repo
+* @profilr-author
+
+# Main source code
+/src/ @profilr-author
+
+# Configuration files
+*.json @profilr-author
+*.ts @profilr-author
+*.tsx @profilr-author
+
+# Documentation
+*.md @profilr-author
