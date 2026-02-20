@@ -17,17 +17,21 @@ class LoggerClass {
     }
   }
 
+  /** Log an informational message. */
   info(message: string, ...args: unknown[]): void {
     this.log('info', message, ...args);
   }
 
+  /** Log a warning message. */
   warn(message: string, ...args: unknown[]): void {
     this.log('warn', message, ...args);
   }
 
+  /** Log an error message. */
   error(message: string, ...args: unknown[]): void {
     this.log('error', message, ...args);
   }
 }
 
+/** Singleton logger instance for application-wide logging. */
 export const Logger = new LoggerClass();
