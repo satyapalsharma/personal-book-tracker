@@ -22,10 +22,12 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({ section }) => {
       return <AboutSection section={section} />;
     case 'social':
       return <SocialLinksSection section={section} />;
-    default:
+    default: {
       // Exhaustive check – if a new type is added, TypeScript will error here.
       const _exhaustive: never = section;
+      void _exhaustive;
       return <div>Unknown section type</div>;
+    }
   }
 };
 

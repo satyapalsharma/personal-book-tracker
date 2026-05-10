@@ -18,7 +18,7 @@ export interface DragState {
 // Hook
 // ---------------------------------------------------------------------------
 
-export function useReorderableList<T extends ListItem>(initialItems: T[]) {
+export function useReorderableList<T extends { id: string }>(initialItems: T[]) {
   const [items, setItems] = useState<T[]>(initialItems);
   const dragStateRef = useRef<DragState>({
     draggedIndex: null,
@@ -86,6 +86,7 @@ export function useReorderableList<T extends ListItem>(initialItems: T[]) {
 
   return {
     items,
+    setItems,
     onDragStart,
     onDragOver,
     onDrop,

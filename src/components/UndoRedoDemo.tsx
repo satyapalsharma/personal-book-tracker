@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useUndoRedo } from '../hooks/useUndoRedo';
+import { useUndoRedoHistory } from '../hooks/useUndoRedo';
 
 const UndoRedoDemo: React.FC = () => {
   const [count, setCount] = useState(0);
-  const { state, setState, undo, redo, canUndo, canRedo } = useUndoRedo(count, setCount);
+  const { state, setState, undo, redo, canUndo, canRedo } = useUndoRedoHistory(count, setCount);
 
   const increment = useCallback(() => {
     setState(state + 1);

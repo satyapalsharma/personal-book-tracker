@@ -1,7 +1,20 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { AppState } from '../types';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
+import type { UndoRedoActions } from '../types/history';
+import type { AppState } from '../types';
 
-interface UndoRedoContextValue {
+// ---------------------------------------------------------------------------
+// Provider + context-based hook (used by App, MarkdownPreview, UndoRedoControls)
+// ---------------------------------------------------------------------------
+
+export interface UndoRedoContextValue {
   state: AppState;
   canUndo: boolean;
   canRedo: boolean;
@@ -26,7 +39,9 @@ const UndoRedoContext = createContext<UndoRedoContextValue>({
   setState: () => {},
 });
 
-export const UndoRedoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UndoRedoProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [state, setInternalState] = useState<AppState>(initialAppState);
 
   const setState = useCallback((newState: AppState) => {
@@ -74,3 +89,60 @@ export const UndoRedoProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 };
 
 export const useUndoRedo = (): UndoRedoContextValue => useContext(UndoRedoContext);
+
+// ---------------------------------------------------------------------------
+// Standalone generic undo/redo hook (used by UndoRedoDemo)
+// ---------------------------------------------------------------------------
+
+export function useUndoRedoHistory<T>(
+  initialState: T,
+  setState: Dispatch<SetStateAction<T>>,
+): UndoRedoActions<T> {
+  const pastRef = useRef<T[]>([]);
+  const futureRef = useRef<T[]>([]);
+
+  const [current, setCurrent] = useState<T>(initialState);
+
+  const setStateWithHistory = useCallback(
+    (newState: T) => {
+      pastRef.current.push(current);
+      futureRef.current = [];
+      setCurrent(newState);
+      setState(newState);
+    },
+    [current, setState],
+  );
+
+  const undo = useCallback(() => {
+    const past = pastRef.current;
+    if (past.length === 0) return;
+    const previous = past.pop() as T;
+    futureRef.current.push(current);
+    setCurrent(previous);
+    setState(previous);
+  }, [current, setState]);
+
+  const redo = useCallback(() => {
+    const future = futureRef.current;
+    if (future.length === 0) return;
+    const next = future.pop() as T;
+    pastRef.current.push(current);
+    setCurrent(next);
+    setState(next);
+  }, [current, setState]);
+
+  const clear = useCallback(() => {
+    pastRef.current = [];
+    futureRef.current = [];
+  }, []);
+
+  return {
+    state: current,
+    setState: setStateWithHistory,
+    undo,
+    redo,
+    canUndo: pastRef.current.length > 0,
+    canRedo: futureRef.current.length > 0,
+    clear,
+  };
+}
